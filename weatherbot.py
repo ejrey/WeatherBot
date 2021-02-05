@@ -1,22 +1,32 @@
 import discord
-from discord.ext import commands
+import json
+import requests
+from edit import *
+# from discord.ext import commands
 
-bot = commands.Bot(command_prefix = ';wb')
-call_bot = ';wb'
+bot = discord.Client()
+call_bot = ';w'
+api_key = 'API KEY HERE'
+token_key = 'TOKEN HERE'
 
 @bot.event
 async def on_ready():
     print('Bot is online.')
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=';wb'))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=';w {location}'))
 
-# @bot.command() #Get will say get function to do something
-# async def wb(ctx):
-#     await ctx.send('Test!')
+@bot.event
+async def on_message(ctx):
+    if ctx.author != bot.user and ctx.content.startswith(call_bot):
+        location = ctx.content.replace(call_bot, '').lower()
+        if len(location) >= 1:
+            #Weather data
+            url = f'http://api.openweathermap.org/data/2.5/weather?q={location}&appid={api_key}&units=metric'
+            try:
+                data = json.loads(requests.get(url).content)
+                data = parse_data(data)
+                await ctx.channel.send(embed = weather_message(data, location))
+            except KeyError:
+                await ctx.channel.send(embed = error_message(location))
 
-# @bot.event
-# async def on_message(message):
-#     if message.author != bot.user and message.content.startswith(call_bot)
 
-
-
-bot.run('TOKEN')
+bot.run(token_key)
