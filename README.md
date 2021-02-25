@@ -8,4 +8,4 @@ Discord Bot that can be used in servers to tell the weather in a certain city<br
   <img src="https://github.com/ejrey/WeatherBot/blob/main/images/SanFran.png" width="250">
 </p>
 
-
+Good Job Eric Reyes! Warzone?
